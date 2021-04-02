@@ -2028,6 +2028,111 @@ MonoBehaviour:
   txtOption: {fileID: 1357983797}
   idBtn: 2
   text: 
+--- !u!1001 &1862217428
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_Name
+      value: SocketIO
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: url
+      value: ws://localhost:3000/socket.io/?EIO=4&transport=websocket
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: ackExpirationTime
+      value: 1800
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: autoConnect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+      propertyPath: reconnectDelay
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b30cc084d923f0645b55bba668610d48, type: 3}
+--- !u!1 &1862217429 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: b30cc084d923f0645b55bba668610d48,
+    type: 3}
+  m_PrefabInstance: {fileID: 1862217428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1862217430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862217429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc18c6a9999ef7643bdfc43a1d021ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1862217431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862217429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f236ffd2e11b5848b7ab4801082623a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  URL_Server: 
+  idSocket: 
 --- !u!1 &1935317695
 GameObject:
   m_ObjectHideFlags: 0

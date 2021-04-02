@@ -24,5 +24,6 @@ public class BtnOptionController : MonoBehaviour
     public void BTN_OptionClicked ()
     {
         print("opcion es: " + isCorrect);
+        ServerListener.Instance.BTN_click();
     }
 }

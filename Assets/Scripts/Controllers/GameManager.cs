@@ -30,17 +30,17 @@ public class GameManager : MonoBehaviour
         Question qq = new Question();
         qq.question = "Cuanto es 2 + 5 - 3?";
         Option op1 = new Option();
-        op1.text = "1";
-        op1.isCorrect = false;
+        op1.option = "1";
+        op1.status = false;
         Option op2 = new Option();
-        op2.text = "2";
-        op2.isCorrect = false;
+        op2.option = "2";
+        op2.status = false;
         Option op3 = new Option();
-        op3.text = "6";
-        op3.isCorrect = false;
+        op3.option = "6";
+        op3.status = false;
         Option op4 = new Option();
-        op4.text = "4";
-        op4.isCorrect = true;
+        op4.option = "4";
+        op4.status = true;
 
         qq.options.Add(op1);
         qq.options.Add(op2);
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         int indexQuestion = 0;
         segs = segMax;
         
-        if (questions[indexQuestion].img == "")
+        if (questions[indexQuestion].images == "")
         {
             // mostrar solo pregunta
             txtTittleQuestion.gameObject.SetActive(false);
@@ -87,8 +87,8 @@ public class GameManager : MonoBehaviour
         // llenar texto de las opciones
         for (int i = 0; i < btnOptions.Length; i++)
         {
-            btnOptions[i].SetAnswerBtnOption(questions[indexQuestion].options[i].text,
-                questions[indexQuestion].options[i].isCorrect);
+            btnOptions[i].SetAnswerBtnOption(questions[indexQuestion].options[i].option,
+                questions[indexQuestion].options[i].status);
         }
 
         // activar cuenta atras
