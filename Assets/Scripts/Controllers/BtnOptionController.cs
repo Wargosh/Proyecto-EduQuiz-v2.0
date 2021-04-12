@@ -15,6 +15,8 @@ public class BtnOptionController : MonoBehaviour
 
     private bool isCorrect = false;
 
+    
+
     public void SetAnswerBtnOption(string option, bool isCorrect)
     {
         txtOption.text = text = option;
@@ -24,6 +26,5 @@ public class BtnOptionController : MonoBehaviour
     public void BTN_OptionClicked ()
     {
         print("opcion es: " + isCorrect);
-        ServerListener.Instance.BTN_click();
     }
 }

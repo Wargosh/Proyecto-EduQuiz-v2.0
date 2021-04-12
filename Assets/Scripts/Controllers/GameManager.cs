@@ -1,25 +1,32 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Imagenes")]
     public Image imgClock;
     public Image imgQuestion;
 
+    [Header("Textos")]
     public TextMeshProUGUI txtClock;
     public TextMeshProUGUI txtTittleQuestion;
     public TextMeshProUGUI txtTittleMainQuestion;
 
     // Control de los botones de opcion
+    [Header("Control de las opciones")]
     public BtnOptionController[] btnOptions;
+    private int[] orderOptions = new int[4] { 0, 1, 2, 3 };
+
+    [Header("Animaciones")]
+    public Animator animQuestion;
 
     // nuevo juego
     bool activateClock = false;
-    [SerializeField]
-    private List<Question> questions = new List<Question>();
+
+    // variables pregunta
+    int indexQuestion = 0;
 
     // reloj
     const float segMax = 20;
@@ -27,31 +34,11 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Question qq = new Question();
-        qq.question = "Cuanto es 2 + 5 - 3?";
-        Option op1 = new Option();
-        op1.option = "1";
-        op1.status = false;
-        Option op2 = new Option();
-        op2.option = "2";
-        op2.status = false;
-        Option op3 = new Option();
-        op3.option = "6";
-        op3.status = false;
-        Option op4 = new Option();
-        op4.option = "4";
-        op4.status = true;
 
-        qq.options.Add(op1);
-        qq.options.Add(op2);
-        qq.options.Add(op3);
-        qq.options.Add(op4);
-
-        questions.Add(qq);
     }
     void Start()
     {
-        NewGame();
+        
     }
 
     void Update()
@@ -62,37 +49,62 @@ public class GameManager : MonoBehaviour
         CountDownClock();
     }
 
+    public void BTN_NewGame()
+    {
+        NewGame();
+    }
+
     public void NewGame()
     {
-        int indexQuestion = 0;
+        indexQuestion = Random.Range(0, ServerListener.Instance.listQuestions.questions.Count);
         segs = segMax;
-        
-        if (questions[indexQuestion].images == "")
+        imgClock.fillAmount = 1;
+
+        ShowQuestion();
+    }
+
+    public void ShowQuestion()
+    {
+        if (ServerListener.Instance.listQuestions.questions[indexQuestion].images.Length == 0)
         {
             // mostrar solo pregunta
             txtTittleQuestion.gameObject.SetActive(false);
             txtTittleMainQuestion.gameObject.SetActive(true);
-            txtTittleMainQuestion.text = questions[indexQuestion].question;
+            txtTittleMainQuestion.text = ServerListener.Instance.listQuestions.questions[indexQuestion].question;
             imgQuestion.gameObject.SetActive(false);
-        } else
+        }
+        else
         {
             // mostrar pregunta con imagen
             txtTittleQuestion.gameObject.SetActive(true);
             txtTittleMainQuestion.gameObject.SetActive(false);
-            txtTittleQuestion.text = questions[indexQuestion].question;
+            txtTittleQuestion.text = ServerListener.Instance.listQuestions.questions[indexQuestion].question;
             imgQuestion.gameObject.SetActive(true);
-            imgQuestion.sprite = Resources.Load<Sprite>("Images/EnDesarrollo"/* + questions[indexQuestion].img*/); // Cargar imagen
+            //imgQuestion.sprite = Resources.Load<Sprite>("Images/EnDesarrollo"/* + questions[indexQuestion].img*/); // Cargar imagen
+            StartCoroutine(LoadImage("http://localhost:3000/upload/questions/" + ServerListener.Instance.listQuestions.questions[indexQuestion].images[0]));
         }
+
+        // posiciones de las opciones en aleatorio
+        RandomOptions();
 
         // llenar texto de las opciones
         for (int i = 0; i < btnOptions.Length; i++)
         {
-            btnOptions[i].SetAnswerBtnOption(questions[indexQuestion].options[i].option,
-                questions[indexQuestion].options[i].status);
+            btnOptions[i].SetAnswerBtnOption(
+                ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].option,
+                ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].status);
         }
 
         // activar cuenta atras
         activateClock = true;
+    }
+
+    IEnumerator LoadImage(string url)
+    {
+        WWW www = new WWW(url);
+        yield return www;
+        imgQuestion.sprite = Sprite.Create(www.texture, new Rect(0, 0,
+            www.texture.width, www.texture.height), new Vector2(0, 0));
     }
 
     public void ResetGame()
@@ -110,6 +122,38 @@ public class GameManager : MonoBehaviour
             segs -= Time.deltaTime;
             imgClock.fillAmount -= Time.deltaTime / segMax;
             txtClock.text = "" + segs.ToString("00");
+        }
+    }
+
+    private void RandomOptions ()
+    {
+        int steps = 5;
+        int aux;
+        for (int i = 0; i < steps; i++)
+        {
+            int index1 = Random.Range(0, orderOptions.Length);
+            int index2 = Random.Range(0, orderOptions.Length);
+            if (index1 == index2)
+            {
+                float prob = Random.Range(0f, 1f);
+                if (prob <= 0.5f)
+                {
+                    if (index2 == (orderOptions.Length - 1))
+                        index2 = 0;
+                    else
+                        index2++;
+                }
+                else
+                {
+                    if (index2 == 0)
+                        index2 = orderOptions.Length - 1; // 3
+                    else
+                        index2--;
+                }
+            }
+            aux = orderOptions[index1];
+            orderOptions[index1] = orderOptions[index2];
+            orderOptions[index2] = aux;
         }
     }
 }
