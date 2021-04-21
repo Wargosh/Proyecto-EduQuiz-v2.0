@@ -7,11 +7,9 @@ using TMPro;
 public class BtnOptionController : MonoBehaviour
 {
     public TextMeshProUGUI txtOption;
-    public TextMeshProUGUI txtMessagePanel;
 
     [Header("Animaciones")]
     public Animator animQuestion;
-    public Animator animPanelMessages;
     private Animator anim;
 
     [SerializeField]
@@ -19,7 +17,7 @@ public class BtnOptionController : MonoBehaviour
     [SerializeField]
     private string text = "";
 
-    private bool isCorrect = false;
+    public bool isCorrect = false;
 
     private void Awake() {
         anim = GetComponent<Animator>();
@@ -34,12 +32,11 @@ public class BtnOptionController : MonoBehaviour
     public void BTN_OptionClicked ()
     {
         if (GameManager.Instance.OptionIsClicked()) {
-            print("opcion es: " + isCorrect);
             if (!isCorrect){
-                txtMessagePanel.text = "¡Incorrecto!";
+                GameManager.Instance.IncorrectQuestion();
                 StartCoroutine("TimeAnimError");
             } else {
-                txtMessagePanel.text = "¡Correcto!";
+                GameManager.Instance.CorrectQuestion();
                 StartCoroutine("TimeAnimCorrect");
             }
         }
@@ -48,29 +45,18 @@ public class BtnOptionController : MonoBehaviour
     IEnumerator TimeAnimError(){
         animQuestion.SetBool("isError", true);
         anim.SetBool("isIncorrect", true);
-        animPanelMessages.SetBool("showMessage", true);
 
         yield return new WaitForSeconds(0.2f);
         animQuestion.SetBool("isError", false);
-        yield return new WaitForSeconds(1.8f);
-        // restablece animaciones
-        anim.SetBool("isIncorrect", false);
-        animPanelMessages.SetBool("showMessage", false);
-        // invoca la proxima pregunta
-        GameManager.Instance.NextQuestion();
+        yield return new WaitForSeconds(3.8f);
+        
+        GameManager.Instance.BTN_Continue();
     }
 
     IEnumerator TimeAnimCorrect(){
         anim.SetBool("isCorrect", true);
-        animPanelMessages.SetBool("showMessage", true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
 
-        // restablece animaciones
-        anim.SetBool("isCorrect", false);
-        animPanelMessages.SetBool("showMessage", false);
-        // invoca la proxima pregunta
-        GameManager.Instance.NextQuestion();
+        GameManager.Instance.BTN_Continue();
     }
-
-    
 }

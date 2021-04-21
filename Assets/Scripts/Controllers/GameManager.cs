@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using TMPro;
 
 [RequireComponent(typeof(CategoriesController))]
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI txtCategory;
     public TextMeshProUGUI txtTittleQuestion;
     public TextMeshProUGUI txtTittleMainQuestion;
+    public TextMeshProUGUI txtMessagePanel;
 
     // Control de los botones de opcion
     [Header("Control de las opciones")]
@@ -26,56 +28,61 @@ public class GameManager : MonoBehaviour
     // Animaciones
     [Header("Animaciones")]
     public Animator animQuestion;
+    public Animator animPanelMessages;
     Animator[] animOptions = new Animator[4];
+
+    // Control de paneles
+    [Header("Paneles")]
+    public GameObject panelFooterWilcards;
+    public GameObject panelFooterActions;
+    public CanvasGroup canvasFooterActions;
 
     // nuevo juego
     bool activateClock = false;
+    [HideInInspector] public bool triggerContinued = true;
 
     // variables pregunta
     int indexQuestion = 0, indexOptionClicked = -1;
 
     // reloj
-    const float segMax = 20;
-    float segs = 20;
+    const float segMax = 15;
+    float segs = 15;
 
     public static GameManager Instance { set; get; }
 
-    private void Awake()
-    {
+    private void Awake(){
         Instance = this;
     }
-    void Start()
-    {
+    void Start() {
         for (int i = 0; i < btnOptions.Length; i++){
             animOptions[i] = btnOptions[i].gameObject.GetComponent<Animator>();
         }
     }
 
-    void Update()
-    {
+    void Update() {
         if (!activateClock)
             return;
 
         CountDownClock();
     }
 
-    public void BTN_NewGame()
-    {
+    public void BTN_NewGame() {
         NewGame();
     }
 
-    public void NewGame()
-    {
+    public void NewGame() {
         indexQuestion = -1;
         
         NextQuestion();
     }
 
     public void NextQuestion(){ 
+        
         indexQuestion++;
         if (indexQuestion < ServerListener.Instance.listQuestions.questions.Count) {
             segs = segMax;
             imgClock.fillAmount = 1;
+            txtClock.text = "" + segs.ToString("0");
             StartCoroutine("TimeShowNewQuestion");
             //ShowQuestion();
         }
@@ -118,12 +125,12 @@ public class GameManager : MonoBehaviour
     {
         // numero de la pregunta
         txtNumQuestion.text = (indexQuestion + 1) + "/" + ServerListener.Instance.listQuestions.questions.Count;
-
         // mostrar UI panel de pregunta
         animQuestion.SetBool("isHide", false);
-
         // posiciones de las opciones en aleatorio
         RandomOptions();
+        // habilitar panel comodines
+        EnablePanelWilcards();
 
         StartCoroutine("ShowOptions");
     }
@@ -132,15 +139,19 @@ public class GameManager : MonoBehaviour
         // llenar texto de las opciones
         for (int i = 0; i < btnOptions.Length; i++)
         {
-            yield return new WaitForSeconds(.25f);
-            animOptions[i].SetBool("isHide", false);
             btnOptions[i].SetAnswerBtnOption(
                 ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].option,
                 ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].status);
+            yield return new WaitForSeconds(.25f);
+            animOptions[i].SetBool("isHide", false);
         }
 
         // activar cuenta atras
         activateClock = true;
+        // habilitar comodines
+        WilcardButtonsController.Instance.EnableWilcardButtons();
+        // habilitar el uso del boton continuar
+        triggerContinued = true;
     }
     
     private void VerifyChangeTheme (string category){
@@ -151,11 +162,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < animOptions.Length; i++){
             animOptions[i].SetBool("isHide", true);
             animOptions[i].SetBool("isCorrect", false);
+            animOptions[i].SetBool("isIncorrect", false);
         }
     }
 
     public bool OptionIsClicked () {
         activateClock = false;
+        WilcardButtonsController.Instance.DisableWilcardButtons();
+        // mostrar botones de accion luego de n tiempo
+        StartCoroutine("TimeBtnContinue");
 
         if (indexOptionClicked != indexQuestion) {
             indexOptionClicked = indexQuestion;
@@ -163,6 +178,11 @@ public class GameManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    IEnumerator TimeBtnContinue () {
+        yield return new WaitForSeconds(1.5f);
+        EnablePanelActions();
     }
 
     private void FindOptionCorrect(){
@@ -174,15 +194,104 @@ public class GameManager : MonoBehaviour
 
     IEnumerator LoadImage(string url)
     {
-        WWW www = new WWW(url);
-        yield return www;
-        imgQuestion.sprite = Sprite.Create(www.texture, new Rect(0, 0,
-            www.texture.width, www.texture.height), new Vector2(0, 0));
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+        yield return www.SendWebRequest();
+
+        if(www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+        }
+        else {
+            Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            imgQuestion.sprite = Sprite.Create(myTexture, new Rect(0, 0,
+            myTexture.width, myTexture.height), new Vector2(0, 0));
+        }
     }
 
     public void ResetGame()
     {
         NewGame();
+    }
+
+    private void EnableButtonsAction(){
+        canvasFooterActions.interactable = true;
+        canvasFooterActions.blocksRaycasts = true;
+    }
+
+    public void DisableButtonsAction(){
+        canvasFooterActions.interactable = false;
+        canvasFooterActions.blocksRaycasts = false;
+    }
+
+    private void EnablePanelWilcards(){
+        panelFooterWilcards.SetActive(true);
+        panelFooterActions.SetActive(false);
+    }
+
+    private void EnablePanelActions(){
+        EnableButtonsAction();
+
+        panelFooterWilcards.SetActive(false);
+        panelFooterActions.SetActive(true);
+    }
+
+    /* *************************************** COMODINES *************************************** */
+    public void EjectWilcard_CorrectQuestion(){
+        OptionIsClicked();
+        CorrectQuestion();
+    }
+    public void EjectWilcard_50_50(){
+        int indexCorrect = -1, auxIndex2 = -1, countOp = 0;
+        for (int i = 0; i < btnOptions.Length; i++){
+            if (btnOptions[i].isCorrect){
+                indexCorrect = i;
+                break;
+            }
+        }
+        do
+        {
+            int rr = Random.Range(0, 4);
+            if (countOp == 0  && rr != indexCorrect) {
+                auxIndex2 = rr;
+                animOptions[rr].SetBool("isHide", true);
+                countOp++;
+            }
+            if (countOp == 1  && rr != indexCorrect && rr != auxIndex2) {
+                animOptions[rr].SetBool("isHide", true);
+                countOp++;
+            }
+        } while (countOp < 2);
+    }
+    public void EjectWilcard_Plus10Seconds() {
+        if (activateClock && segs > 0f)
+            segs += 10;
+    }
+    public void CorrectQuestion(){
+        ShowMessagePanel("¡Correcto!");
+        print("Correcto!");
+    }
+
+    public void IncorrectQuestion(string message = "¡Incorrecto!"){
+        ShowMessagePanel(message);
+        print("Incorrecto...");
+    }
+
+    private void ShowMessagePanel (string message) {
+        txtMessagePanel.text = message;
+        animPanelMessages.SetBool("showMessage", true);
+    }
+
+    public void BTN_Continue () {
+        // evita que el boton se ejecute mas de una vez por pregunta
+        if (triggerContinued)
+            triggerContinued = false;
+        else
+            return;
+        
+        DisableButtonsAction();
+        // restablece animaciones
+        animPanelMessages.SetBool("showMessage", false);
+        // invoca la proxima pregunta
+        NextQuestion();
     }
 
     /// <summary>
@@ -193,8 +302,11 @@ public class GameManager : MonoBehaviour
         if (segs > 0)
         {
             segs -= Time.deltaTime;
-            imgClock.fillAmount -= Time.deltaTime / segMax;
-            txtClock.text = "" + segs.ToString("00");
+            imgClock.fillAmount = (float)(segs / segMax);
+            txtClock.text = "" + segs.ToString("0");
+        } else if (segs <= 0f) {
+            OptionIsClicked();
+            IncorrectQuestion("¡Tiempo fuera!");
         }
     }
 
