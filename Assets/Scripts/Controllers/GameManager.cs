@@ -36,10 +36,12 @@ public class GameManager : MonoBehaviour
     public GameObject panelFooterWilcards;
     public GameObject panelFooterActions;
     public CanvasGroup canvasFooterActions;
+    public GameObject panelResumeGame;
 
     // nuevo juego
     bool activateClock = false;
     [HideInInspector] public bool triggerContinued = true;
+    [HideInInspector] public bool activateReport = false;
 
     // variables pregunta
     int indexQuestion = 0, indexOptionClicked = -1;
@@ -48,47 +50,62 @@ public class GameManager : MonoBehaviour
     const float segMax = 15;
     float segs = 15;
 
+    // Puntos
+    private int _hits, _hitStreak, _maxHitStreak, _fails; // aciertos | racha de aciertos | Maxima racha | fallos
+
     public static GameManager Instance { set; get; }
 
-    private void Awake(){
+    private void Awake (){
         Instance = this;
     }
-    void Start() {
-        for (int i = 0; i < btnOptions.Length; i++){
+    void Start () {
+        for (int i = 0; i < btnOptions.Length; i++) {
             animOptions[i] = btnOptions[i].gameObject.GetComponent<Animator>();
         }
+        LoadRandomQuestions();
     }
 
-    void Update() {
+    void Update () {
         if (!activateClock)
             return;
 
         CountDownClock();
     }
 
-    public void BTN_NewGame() {
-        NewGame();
+    public void LoadRandomQuestions () { 
+        PanelLoadingGame.Instance.ShowPanelLoading();
+        MessagesToServer.Instance.GetRandomQuestions();
+
+        // Esperar respuesta del servidor ...
+        // NewGame();
     }
 
-    public void NewGame() {
+    public void NewGame () {
         indexQuestion = -1;
+        _hits = _hitStreak = _maxHitStreak = _fails = 0; // restablecer puntos
+        PanelLoadingGame.Instance.HidePanelLoading();
+        HidePanelResumeGame();
+        WilcardButtonsController.Instance.DisableWilcardButtons();
+        EnablePanelWilcards();
         
         NextQuestion();
     }
 
-    public void NextQuestion(){ 
-        
+    public void NextQuestion () { 
         indexQuestion++;
         if (indexQuestion < ServerListener.Instance.listQuestions.questions.Count) {
             segs = segMax;
             imgClock.fillAmount = 1;
             txtClock.text = "" + segs.ToString("0");
             StartCoroutine("TimeShowNewQuestion");
-            //ShowQuestion();
+        } else{
+            ShowPanelResumeGame();
+            PanelResumeGameController.Instance.DisableResumePanelButtons();
+            PanelResumeGameController.Instance.ShowAllPoints(1, _hits, _maxHitStreak);
         }
     }
 
-    IEnumerator TimeShowNewQuestion(){
+    IEnumerator TimeShowNewQuestion () {
         HideUI_Options();
         VerifyChangeTheme(txtTittleQuestion.text = ServerListener.Instance.listQuestions.questions[indexQuestion].category);
         yield return new WaitForSeconds(.5f);
@@ -101,16 +118,13 @@ public class GameManager : MonoBehaviour
 
     private void LoadQuestion() {
         txtCategory.text = ServerListener.Instance.listQuestions.questions[indexQuestion].category;
-        if (ServerListener.Instance.listQuestions.questions[indexQuestion].images.Length == 0)
-        {
+        if (ServerListener.Instance.listQuestions.questions[indexQuestion].images.Length == 0) {
             // mostrar solo pregunta
             txtTittleQuestion.gameObject.SetActive(false);
             txtTittleMainQuestion.gameObject.SetActive(true);
             txtTittleMainQuestion.text = ServerListener.Instance.listQuestions.questions[indexQuestion].question;
             imgQuestion.gameObject.SetActive(false);
-        }
-        else
-        {
+        } else {
             // mostrar pregunta con imagen
             txtTittleQuestion.gameObject.SetActive(true);
             txtTittleMainQuestion.gameObject.SetActive(false);
@@ -121,8 +135,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShowQuestion()
-    {
+    public void ShowQuestion () {
         // numero de la pregunta
         txtNumQuestion.text = (indexQuestion + 1) + "/" + ServerListener.Instance.listQuestions.questions.Count;
         // mostrar UI panel de pregunta
@@ -135,10 +148,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine("ShowOptions");
     }
 
-    IEnumerator ShowOptions(){
+    IEnumerator ShowOptions () {
         // llenar texto de las opciones
-        for (int i = 0; i < btnOptions.Length; i++)
-        {
+        for (int i = 0; i < btnOptions.Length; i++) {
             btnOptions[i].SetAnswerBtnOption(
                 ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].option,
                 ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].status);
@@ -154,7 +166,7 @@ public class GameManager : MonoBehaviour
         triggerContinued = true;
     }
     
-    private void VerifyChangeTheme (string category){
+    private void VerifyChangeTheme (string category) {
         imgBackgroundTheme.sprite = CategoriesController.Instance.ChangeBackgroundTheme(category);
     }
     private void HideUI_Options () {
@@ -185,15 +197,14 @@ public class GameManager : MonoBehaviour
         EnablePanelActions();
     }
 
-    private void FindOptionCorrect(){
+    private void FindOptionCorrect () {
         for (int i = 0; i < animOptions.Length; i++){
             if (ServerListener.Instance.listQuestions.questions[indexQuestion].options[orderOptions[i]].status)
                 animOptions[i].SetBool("isCorrect", true);
         }
     }
 
-    IEnumerator LoadImage(string url)
-    {
+    IEnumerator LoadImage (string url) {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
         yield return www.SendWebRequest();
 
@@ -207,39 +218,61 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ResetGame()
-    {
-        NewGame();
+    public void BTN_ResetGame () {
+        LoadRandomQuestions();
     }
 
-    private void EnableButtonsAction(){
+    /* *************************************** CONTENT FOOTER *************************************** */
+    private void EnableButtonsAction () {
         canvasFooterActions.interactable = true;
         canvasFooterActions.blocksRaycasts = true;
+        activateReport = true;
     }
 
-    public void DisableButtonsAction(){
+    public void DisableButtonsAction () {
         canvasFooterActions.interactable = false;
         canvasFooterActions.blocksRaycasts = false;
     }
 
-    private void EnablePanelWilcards(){
+    private void EnablePanelWilcards () {
         panelFooterWilcards.SetActive(true);
         panelFooterActions.SetActive(false);
     }
 
-    private void EnablePanelActions(){
+    private void EnablePanelActions () {
         EnableButtonsAction();
 
         panelFooterWilcards.SetActive(false);
         panelFooterActions.SetActive(true);
     }
 
+    public void BTN_Continue () {
+        // evita que el boton se ejecute mas de una vez por pregunta
+        if (triggerContinued)
+            triggerContinued = false;
+        else
+            return;
+        
+        DisableButtonsAction();
+        // restablece animaciones
+        animPanelMessages.SetBool("showMessage", false);
+        // invoca la proxima pregunta
+        NextQuestion();
+    }
+
+    public void BTN_ShowPanelReportQuestion () {
+        if (activateReport) {
+            ReportController.Instance.EnableContentReportQuestion();
+            ReportController.Instance.EnableButtonSendReport();
+        }
+    }
+
     /* *************************************** COMODINES *************************************** */
-    public void EjectWilcard_CorrectQuestion(){
+    public void EjectWilcard_CorrectQuestion() {
         OptionIsClicked();
         CorrectQuestion();
     }
-    public void EjectWilcard_50_50(){
+    public void EjectWilcard_50_50() {
         int indexCorrect = -1, auxIndex2 = -1, countOp = 0;
         for (int i = 0; i < btnOptions.Length; i++){
             if (btnOptions[i].isCorrect){
@@ -265,14 +298,32 @@ public class GameManager : MonoBehaviour
         if (activateClock && segs > 0f)
             segs += 10;
     }
-    public void CorrectQuestion(){
+
+    /* *************************************** CORRECTO O INCORRECTO? *************************************** */
+    public void CorrectQuestion() {
+        _hits++; _hitStreak++;
+        if (_hitStreak > _maxHitStreak)
+            _maxHitStreak = _hitStreak;
         ShowMessagePanel("¡Correcto!");
         print("Correcto!");
     }
 
-    public void IncorrectQuestion(string message = "¡Incorrecto!"){
+    public void IncorrectQuestion(string message = "¡Incorrecto!") {
+        _fails++; 
+        if (_hitStreak > _maxHitStreak)
+            _maxHitStreak = _hitStreak;
+        _hitStreak = 0;
         ShowMessagePanel(message);
         print("Incorrecto...");
+    }
+
+    /* *************************************** PANEL RESUMEN DEL JUEGO *************************************** */
+    public void ShowPanelResumeGame () {
+        panelResumeGame.SetActive(true);
+    }
+
+    public void HidePanelResumeGame () {
+        panelResumeGame.SetActive(false);
     }
 
     private void ShowMessagePanel (string message) {
@@ -280,25 +331,10 @@ public class GameManager : MonoBehaviour
         animPanelMessages.SetBool("showMessage", true);
     }
 
-    public void BTN_Continue () {
-        // evita que el boton se ejecute mas de una vez por pregunta
-        if (triggerContinued)
-            triggerContinued = false;
-        else
-            return;
-        
-        DisableButtonsAction();
-        // restablece animaciones
-        animPanelMessages.SetBool("showMessage", false);
-        // invoca la proxima pregunta
-        NextQuestion();
-    }
-
     /// <summary>
     /// Mantiene la cuenta atras del reloj por pregunta con el tiempo maximo establecido
     /// </summary>
-    private void CountDownClock ()
-    {
+    private void CountDownClock () {
         if (segs > 0)
         {
             segs -= Time.deltaTime;
@@ -310,8 +346,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void RandomOptions ()
-    {
+    private void RandomOptions () {
         int steps = 5;
         int aux;
         for (int i = 0; i < steps; i++)

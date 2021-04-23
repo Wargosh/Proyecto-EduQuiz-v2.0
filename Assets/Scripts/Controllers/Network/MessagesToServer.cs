@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
-
+using SocketIO;
 public class MessagesToServer : MonoBehaviour
 {
+    SocketIOComponent socket;
     public static MessagesToServer Instance { get; set; }
-    //private QSocket socket;
-    void Awake()
-    {
+    void Awake () {
         Instance = this;
-        //socket = ServerListener.Instance.socket;
+        DontDestroyOnLoad(this.gameObject);
+        socket = GetComponent<SocketIOComponent>();
     }
 
-    void Start()
-    {
-        
+    public void GetRandomQuestions () {
+        socket.Emit("questions:get");
     }
 }
