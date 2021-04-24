@@ -4,41 +4,15 @@ Un juego de preguntas con diversas categorías.
 
 ## Comenzando 🚀
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
-Este proyecto depende de la creación del proyecto [EduQuiz Servidor](https://github.com/rokthar/EduQuizV2) para su correcto funcionamiento, 
-
-
+Este proyecto depende de la creación del proyecto [EduQuiz Servidor](https://github.com/rokthar/EduQuizV2) el cuál contiene el corazón del servidor para su correcto funcionamiento.
 
 ### Pre-requisitos 📋
 
-_Que cosas necesitas para instalar el software y como instalarlas_
-
-```
-Da un ejemplo
-```
-
-### Instalación 🔧
-
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
-
-_Dí cómo será ese paso_
-
-```
-Da un ejemplo
-```
-
-_Y repite_
-
-```
-hasta finalizar
-```
-
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
+* Tener instalado [Unity](https://unity.com/es) con una versión posterior o igual a v2019.4.8f1.
 
 ## Despliegue 📦
 
-La aplicación no requiere ningun tipo de despliegue para su funcionamiento, sin enbargo si requiere de una construcción que en nuestro caso fue la plataforma [Android](https://docs.unity3d.com/es/2019.4/Manual/android-BuildProcess.html)
+La aplicación no requiere ningun tipo de despliegue para su funcionamiento, sin embargo requiere de una construcción a alguna plataforma que en nuestro caso fue la plataforma [Android](https://docs.unity3d.com/es/2019.4/Manual/android-BuildProcess.html).
 
 ## Construido con 🛠️
 
@@ -65,13 +39,14 @@ _Son mencionados los participantes del desarrollo tanto del juego como de la par
 
 Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
+<!--
 ## Expresiones de Gratitud 🎁
 
 * Comenta a otros sobre este proyecto 📢
 * Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
 * Da las gracias públicamente 🤓.
-* etc.
-
+* etc.  
+-->
 
 
 ---
