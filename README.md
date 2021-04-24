@@ -23,10 +23,6 @@ _Herramientas utilizadas para la creación del proyecto_
 * [Unity](https://store.unity.com/download?ref=personal) (_v2019.4.8f1_) - El motor gráfico usado para la creación del juego.
 * [Socket.IO](https://www.npmjs.com/package/socket.io/v/2.3.0) (_v^2.3.0_) - Usado para la comunicación en tiempo real con el servidor.
 
-## Contribuyendo 🖇️
-
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
-
 ## Autores ✒️
 
 _Son mencionados los participantes del desarrollo tanto del juego como de la parte web y servidor ya que sin esto el juego no funcionaría._
@@ -34,10 +30,6 @@ _Son mencionados los participantes del desarrollo tanto del juego como de la par
 * **Ricardo Esparza** - *Desarrollo BackEnd y FrontEnd* - [Rockthar](https://github.com/rokthar)
 * **Gerardo Ramirez** - *Desarrollo BackEnd y Base de datos* - [Gedrix](https://github.com/gedrix)
 * **Erick Jara** - *Desarrollo del juego y comunicación con el servidor* - [Wargosh](https://github.com/Wargosh)
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
 <!--
 ## Expresiones de Gratitud 🎁
