@@ -6,8 +6,8 @@ Un juego de preguntas con diversas categorías.
 
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
-Este proyecto comenzo como u
-Mira **Deployment** para conocer como desplegar el proyecto.
+Este proyecto depende de la creación del proyecto [EduQuiz Servidor](https://github.com/rokthar/EduQuizV2) para su correcto funcionamiento, 
+
 
 
 ### Pre-requisitos 📋
@@ -42,7 +42,7 @@ La aplicación no requiere ningun tipo de despliegue para su funcionamiento, sin
 
 ## Construido con 🛠️
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
+_Herramientas utilizadas para la creación del proyecto_
 
 * [Nodejs](https://nodejs.org/es/) - Servidor para la gestion de preguntas y usuarios.
 * [MongoDB](https://www.mongodb.com/es) - Base de datos no relacional basada en documentos.
@@ -55,13 +55,11 @@ Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) 
 
 ## Autores ✒️
 
-_Se mencionan a los participantes del desarrollo de la parte web y servidor ya que sin este el juego no funcionaria como tal._
+_Son mencionados los participantes del desarrollo tanto del juego como de la parte web y servidor ya que sin esto el juego no funcionaría._
 
 * **Ricardo Esparza** - *Desarrollo BackEnd y FrontEnd* - [Rockthar](https://github.com/rokthar)
 * **Gerardo Ramirez** - *Desarrollo BackEnd y Base de datos* - [Gedrix](https://github.com/gedrix)
 * **Erick Jara** - *Desarrollo del juego y comunicación con el servidor* - [Wargosh](https://github.com/Wargosh)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
 
 ## Licencia 📄
 
