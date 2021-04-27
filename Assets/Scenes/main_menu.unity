@@ -6151,6 +6151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animContentOptions: {fileID: 215419517}
+  txtTotalCoins:
+  - {fileID: 1715696335}
 --- !u!1 &1643683184
 GameObject:
   m_ObjectHideFlags: 0
@@ -6385,7 +6387,7 @@ GameObject:
   - component: {fileID: 1715696336}
   - component: {fileID: 1715696335}
   m_Layer: 5
-  m_Name: txtTotal
+  m_Name: txtTotalCoins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
