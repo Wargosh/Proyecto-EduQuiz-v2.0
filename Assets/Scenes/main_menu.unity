@@ -6151,6 +6151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animContentOptions: {fileID: 215419517}
+  txtUsername: {fileID: 1216613328}
+  txtLevel: {fileID: 1875633031}
+  imgPlayer:
+  - {fileID: 428568831}
   txtTotalCoins:
   - {fileID: 1715696335}
 --- !u!1 &1643683184

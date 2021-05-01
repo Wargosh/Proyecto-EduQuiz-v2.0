@@ -9,6 +9,8 @@ public class ServerListener : MonoBehaviour
     public string URL_Server;
     public string idSocket; // id asignado por el servidor al cliente
 
+    public Player _player;
+
     public class MessageList { public List<Question> questions; }
     public MessageList listQuestions = new MessageList();
 
@@ -18,6 +20,8 @@ public class ServerListener : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
         socket = GetComponent<SocketIOComponent>();
+
+        _player = new Player();
     }
 
     void Start () {

@@ -1,10 +1,10 @@
 using UnityEngine;
 
 public static partial class JSONTemplates {
-
-	/*
-	 * Vector2
-	 */
+/*
+	
+	// * Vector2
+	
 	public static Vector2 ToVector2(JSONObject obj) {
 		float x = obj["x"] ? obj["x"].f : 0;
 		float y = obj["y"] ? obj["y"].f : 0;
@@ -16,9 +16,9 @@ public static partial class JSONTemplates {
 		if(v.y != 0)	vdata.AddField("y", v.y);
 		return vdata;
 	}
-	/*
-	 * Vector3
-	 */
+	
+	// * Vector3
+	
 	public static JSONObject FromVector3(Vector3 v) {
 		JSONObject vdata = JSONObject.obj;
 		if(v.x != 0)	vdata.AddField("x", v.x);
@@ -32,9 +32,9 @@ public static partial class JSONTemplates {
 		float z = obj["z"] ? obj["z"].f : 0;
 		return new Vector3(x, y, z);
 	}
-	/*
-	 * Vector4
-	 */
+	
+	// * Vector4
+	
 	public static JSONObject FromVector4(Vector4 v) {
 		JSONObject vdata = JSONObject.obj;
 		if(v.x != 0)	vdata.AddField("x", v.x);
@@ -50,9 +50,9 @@ public static partial class JSONTemplates {
 		float w = obj["w"] ? obj["w"].f : 0;
 		return new Vector4(x, y, z, w);
 	}
-	/*
-	 * Matrix4x4
-	 */
+	
+	// * Matrix4x4
+	 
 	public static JSONObject FromMatrix4x4(Matrix4x4 m) {
 		JSONObject mdata = JSONObject.obj;
 		if(m.m00 != 0) mdata.AddField("m00", m.m00);
@@ -93,9 +93,9 @@ public static partial class JSONTemplates {
 		if(obj["m33"]) result.m33 = obj["m33"].f;
 		return result;
 	}
-	/*
-	 * Quaternion
-	 */
+	
+	// * Quaternion
+	 
 	public static JSONObject FromQuaternion(Quaternion q) {
 		JSONObject qdata = JSONObject.obj;
 		if(q.w != 0)	qdata.AddField("w", q.w);
@@ -111,9 +111,9 @@ public static partial class JSONTemplates {
 		float w = obj["w"] ? obj["w"].f : 0;
 		return new Quaternion(x, y, z, w);
 	}
-	/*
-	 * Color
-	 */
+	
+	// * Color
+	
 	public static JSONObject FromColor(Color c) {
 		JSONObject cdata = JSONObject.obj;
 		if(c.r != 0)	cdata.AddField("r", c.r);
@@ -134,9 +134,9 @@ public static partial class JSONTemplates {
 		}
 		return c;
 	}
-	/*
-	 * Layer Mask
-	 */
+	
+    //* Layer Mask
+	 
 	public static JSONObject FromLayerMask(LayerMask l) {
 		JSONObject result = JSONObject.obj;
 		result.AddField("value", l.value);
@@ -220,7 +220,7 @@ public static partial class JSONTemplates {
 		Keyframe k = new Keyframe(obj.HasField("time")? obj.GetField("time").n : 0, obj.HasField("value")? obj.GetField("value").n : 0);
 		if(obj.HasField("inTangent")) k.inTangent = obj.GetField("inTangent").n;
 		if(obj.HasField("outTangent")) k.outTangent = obj.GetField("outTangent").n;
-		if(obj.HasField("tangentMode")) k.tangentMode = (int)obj.GetField("tangentMode").n;
+		if(obj.HasField("tangentMode")) k..tangentMode = (int)obj.GetField("tangentMode").n;
 		
 		return k;
 	}
@@ -233,5 +233,5 @@ public static partial class JSONTemplates {
 		if(k.value != 0)	result.AddField("value", k.value);
 		return result;
 	}
-	
+*/	
 }

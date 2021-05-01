@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "844080930936",
+    "project_id": "eduquiz-c632a",
+    "storage_bucket": "eduquiz-c632a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844080930936:android:4b79240c7e609ecb154d8d",
+        "android_client_info": {
+          "package_name": "com.Carbunco.EduQuiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844080930936-f4sj28tpecdsqlihd38d45uoa64a3t85.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Carbunco.EduQuiz",
+            "certificate_hash": "fff5e1c51937570fd97b6054f7e6c24aaa2ca718"
+          }
+        },
+        {
+          "client_id": "844080930936-c6c0s5emc5jabs71ib2m3itk12vfsgpj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASe6p0ucAvqEyf1KDd-70mv5hUvV5-tRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844080930936-c6c0s5emc5jabs71ib2m3itk12vfsgpj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
